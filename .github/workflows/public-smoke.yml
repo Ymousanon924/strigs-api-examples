@@ -1,0 +1,22 @@
+name: Public API smoke checks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 13 * * 1"
+
+jobs:
+  public-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check public endpoints and OpenAPI documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          for product in spreadintel firmsignaliq dependsignal webintel; do
+            curl --fail --silent --show-error "https://${product}.strigsapi.com/health" > /dev/null
+            curl --fail --silent --show-error "https://${product}.strigsapi.com/openapi.json" | jq -e '.openapi and .paths' > /dev/null
+          done
+          curl --fail --silent --show-error https://dependsignal.strigsapi.com/v1/demo | jq -e . > /dev/null
+          curl --fail --silent --show-error https://webintel.strigsapi.com/v1/demo | jq -e . > /dev/null

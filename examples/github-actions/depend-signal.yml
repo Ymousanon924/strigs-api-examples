@@ -1,0 +1,33 @@
+name: Check API contract with DependSignal
+
+on:
+  pull_request:
+    paths:
+      - "openapi.json"
+      - "openapi-approved.json"
+  workflow_dispatch:
+
+jobs:
+  contract-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare approved and proposed OpenAPI documents
+        env:
+          DEPENDSIGNAL_API_KEY: ${{ secrets.DEPENDSIGNAL_API_KEY }}
+        run: |
+          jq -n \
+            --slurpfile before openapi-approved.json \
+            --slurpfile after openapi.json \
+            '{before: $before[0], after: $after[0]}' > /tmp/depend-payload.json
+          curl --fail-with-body \
+            --request POST \
+            --url https://dependsignal.strigsapi.com/v1/compare/openapi \
+            --header "Content-Type: application/json" \
+            --header "X-API-Key: $DEPENDSIGNAL_API_KEY" \
+            --data @/tmp/depend-payload.json \
+            | tee depend-signal-result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: depend-signal-result
+          path: depend-signal-result.json
