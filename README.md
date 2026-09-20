@@ -1,5 +1,8 @@
 # Strigs API examples
 
+[![Validate examples](https://github.com/Ymousanon924/strigs-api-examples/actions/workflows/validate-examples.yml/badge.svg)](https://github.com/Ymousanon924/strigs-api-examples/actions/workflows/validate-examples.yml)
+[![Latest tag](https://img.shields.io/github/v/tag/Ymousanon924/strigs-api-examples)](https://github.com/Ymousanon924/strigs-api-examples/tags)
+
 Runnable examples for the four Strigs API products. Each API returns structured
 JSON, exposes an OpenAPI document, and has a no-key health or demo endpoint.
 
@@ -44,6 +47,13 @@ should be reviewed in context; it is not a universal compatibility guarantee.
 
 For support, open an issue in this repository or email
 `ray.finesse@outlook.com`.
+
+## Development status
+
+This repository contains runnable integration examples, not a hosted SDK or a
+promise that every endpoint is free to call. The examples are currently tagged
+`v0.1.0`. They use synthetic payloads and public documentation endpoints; do
+not substitute customer data or private URLs.
 
 ## Security
 

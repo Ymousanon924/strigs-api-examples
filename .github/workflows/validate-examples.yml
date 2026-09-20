@@ -1,0 +1,32 @@
+name: Validate examples
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compile Python examples
+        run: python -m compileall examples/python
+      - name: Check JavaScript syntax
+        run: node --check examples/javascript/quickstart.mjs
+      - name: Check for accidental secret-shaped files
+        shell: bash
+        run: |
+          if find . -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' \) -not -path './.git/*' | grep -q .; then
+            echo 'Secret-shaped files must not be committed.'
+            exit 1
+          fi
