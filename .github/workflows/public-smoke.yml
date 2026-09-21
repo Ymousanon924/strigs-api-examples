@@ -15,8 +15,15 @@ jobs:
         run: |
           set -euo pipefail
           for product in spreadintel firmsignaliq dependsignal webintel; do
+            case "$product" in
+              spreadintel) expected_name="SpreadIntel" ;;
+              firmsignaliq) expected_name="FirmSignalIQ" ;;
+              dependsignal) expected_name="DependSignal" ;;
+              webintel) expected_name="WebIntel" ;;
+            esac
             curl --fail --silent --show-error "https://${product}.strigsapi.com/health" > /dev/null
-            curl --fail --silent --show-error "https://${product}.strigsapi.com/openapi.json" | jq -e '.openapi and .paths' > /dev/null
+            curl --fail --silent --show-error "https://${product}.strigsapi.com/openapi.json" |
+              jq -e --arg expected "$expected_name" '.openapi and .paths and (.info.title | contains($expected))' > /dev/null
           done
           curl --fail --silent --show-error https://dependsignal.strigsapi.com/v1/demo | jq -e . > /dev/null
           curl --fail --silent --show-error https://webintel.strigsapi.com/v1/demo | jq -e . > /dev/null
