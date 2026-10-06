@@ -8,15 +8,26 @@ JSON, exposes an OpenAPI document, and has a no-key health or demo endpoint.
 
 | Product | Job | Documentation | No-key demo |
 | --- | --- | --- | --- |
-| [FirmSignalIQ](https://firmsignaliq.strigsapi.com/) | Turn a company domain into sourced website and technology signals | [OpenAPI](https://firmsignaliq.strigsapi.com/openapi.json) | [Health](https://firmsignaliq.strigsapi.com/health) |
+| [FirmSignalIQ](https://firmsignaliq.strigsapi.com/pricing) | Turn a company domain into sourced website and technology signals | [OpenAPI](https://firmsignaliq.strigsapi.com/openapi.json) | [Try your domain](https://firmsignaliq.strigsapi.com/pricing) |
 | [WebIntel](https://webintel.strigsapi.com/) | Turn meaningful website changes into structured events | [OpenAPI](https://webintel.strigsapi.com/openapi.json) | [Demo](https://webintel.strigsapi.com/v1/demo) |
 | [DependSignal](https://dependsignal.strigsapi.com/) | Detect API failures, response drift, and supported contract changes | [OpenAPI](https://dependsignal.strigsapi.com/openapi.json) | [Demo](https://dependsignal.strigsapi.com/v1/demo) |
 | [SpreadIntel](https://spreadintel.strigsapi.com/) | Generate, repair, explain, and translate spreadsheet formulas | [OpenAPI](https://spreadintel.strigsapi.com/openapi.json) | [Health](https://spreadintel.strigsapi.com/health) |
 
 ## Quick start
 
-Set one product-specific key. Keys are deliberately read from environment
-variables and must never be committed.
+Try one lookup on your own public company domain without a card or key. This
+shared-capacity preview does not save history and is for evaluation, not
+production use. Avoid repeatedly calling it in automation.
+
+```bash
+python examples/python/quickstart.py firmsignaliq-preview your-public-domain.com
+node examples/javascript/quickstart.mjs firmsignaliq-preview your-public-domain.com
+```
+
+For up to 50 company lookups in a UTC month, request a free guided evaluation
+key at `ray.finesse@outlook.com`. Other endpoints need a product-specific key.
+Keys are deliberately read from environment variables and must never be
+committed.
 
 ```bash
 export STRIGS_API_KEY="your-key"
@@ -24,8 +35,8 @@ python examples/python/quickstart.py firmsignaliq
 node examples/javascript/quickstart.mjs webintel
 ```
 
-Supported example names are `firmsignaliq`, `webintel`, `dependsignal`, and
-`spreadintel`.
+Supported example names are `firmsignaliq-preview`, `firmsignaliq`, `webintel`,
+`dependsignal`, and `spreadintel`.
 
 ## DependSignal in CI
 
