@@ -8,6 +8,10 @@ import urllib.request
 
 
 PRODUCTS = {
+    "firmsignaliq-preview": (
+        "https://firmsignaliq.strigsapi.com/v1/preview",
+        None,
+    ),
     "firmsignaliq": (
         "https://firmsignaliq.strigsapi.com/v1/company?domain=openai.com",
         None,
@@ -39,12 +43,16 @@ def main() -> None:
     if product not in PRODUCTS:
         raise SystemExit("Choose one of: " + ", ".join(PRODUCTS))
     api_key = os.environ.get("STRIGS_API_KEY")
-    if not api_key:
+    if product != "firmsignaliq-preview" and not api_key:
         raise SystemExit("Set STRIGS_API_KEY before running this example.")
 
     url, payload = PRODUCTS[product]
+    if product == "firmsignaliq-preview":
+        if len(sys.argv) < 3:
+            raise SystemExit("Usage: python quickstart.py firmsignaliq-preview your-public-domain.com")
+        payload = {"domain": sys.argv[2]}
     body = json.dumps(payload).encode() if payload is not None else None
-    headers = {"X-API-Key": api_key}
+    headers = {"X-API-Key": api_key} if api_key and product != "firmsignaliq-preview" else {}
     if body is not None:
         headers["Content-Type"] = "application/json"
     request = urllib.request.Request(url, data=body, headers=headers)

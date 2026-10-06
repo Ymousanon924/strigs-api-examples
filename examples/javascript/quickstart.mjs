@@ -1,9 +1,16 @@
 const product = process.argv[2];
 const apiKey = process.env.STRIGS_API_KEY;
 
-if (!apiKey) throw new Error("Set STRIGS_API_KEY before running this example.");
+if (product !== "firmsignaliq-preview" && !apiKey) {
+  throw new Error("Set STRIGS_API_KEY before running this example.");
+}
 
 const requests = {
+  "firmsignaliq-preview": {
+    url: "https://firmsignaliq.strigsapi.com/v1/preview",
+    method: "POST",
+    body: { domain: process.argv[3] },
+  },
   firmsignaliq: {
     url: "https://firmsignaliq.strigsapi.com/v1/company?domain=openai.com",
     method: "GET",
@@ -34,11 +41,14 @@ const requests = {
 
 const selected = requests[product];
 if (!selected) throw new Error(`Choose one of: ${Object.keys(requests).join(", ")}`);
+if (product === "firmsignaliq-preview" && !selected.body.domain) {
+  throw new Error("Usage: node quickstart.mjs firmsignaliq-preview your-public-domain.com");
+}
 
 const response = await fetch(selected.url, {
   method: selected.method,
   headers: {
-    "X-API-Key": apiKey,
+    ...(apiKey && product !== "firmsignaliq-preview" ? { "X-API-Key": apiKey } : {}),
     ...(selected.body ? { "Content-Type": "application/json" } : {}),
   },
   body: selected.body ? JSON.stringify(selected.body) : undefined,
